@@ -540,3 +540,43 @@ if len(sys.argv) > 1:
     else: # run however many times
         count = int(sys.argv[1])
 Board().run(count)
+
+# Stats: May 10, 15:05
+# Median for 1000 runs: 540.996
+# nathan@Nathans-MBP boxes % ./boxes.py 1000
+# Average moves: 553.079
+# Average sum: 1666.544
+# Max tile distribution:
+# 	64: 1
+# 	128: 27
+# 	256: 91
+# 	512: 248
+# 	1024: 488
+# 	2048: 145
+# Max board: [[2048, 1024, 512, 256], [32, 128, 256, 64], [8, 16, 32, 16], [2, 4, 2, 4]]
+# Worst seed: 6429000648137277025
+# nathan@Nathans-MBP boxes % ./boxes.py 1000
+# Average moves: 540.996
+# Average sum: 1629.004
+# Max tile distribution:
+# 	64: 5
+# 	128: 28
+# 	256: 87
+# 	512: 267
+# 	1024: 471
+# 	2048: 142
+# Max board: [[2048, 128, 8, 4], [1024, 256, 64, 2], [512, 128, 32, 4], [64, 16, 8, 2]]
+# Worst seed: 9077156536320656620
+# nathan@Nathans-MBP boxes % ./boxes.py 1000
+# Average moves: 530.051
+# Average sum: 1595.226
+# Max tile distribution:
+# 	64: 6
+# 	128: 22
+# 	256: 111
+# 	512: 277
+# 	1024: 466
+# 	2048: 117
+# 	4096: 1
+# Max board: [[4096, 1024, 256, 128], [64, 128, 64, 16], [8, 16, 32, 4], [4, 2, 8, 2]]
+# Worst seed: 3285331602170305581
