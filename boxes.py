@@ -199,26 +199,29 @@ class Board:
             o1 = 1
             if corner[1] == 3:
                 o1 = -1
-            initial_value = self.element_value(corner) * 2
-            value = self.path_value(initial_value, corner, (o0, 0), (0, o1))
+            start_value = self.element_value(corner)
+            value = self.path_value(start_value * 2, corner, (o0, 0), (0, o1))
             if value == None:
                 value = 0
-            value += self.locked(corner, (o0, 0), (0, o1))
+            value += self.locked(start_value, corner, (o0, 0), (0, o1))
             if value > result:
                 result = value
         return result
 
-    def locked(self, corner, d1, d2):
-        if self.edge_locked(corner, d1) or self.edge_locked(corner, d2):
+    def locked(self, start_value, corner, d1, d2):
+        if self.edge_locked(corner, d1) or self.edge_locked(start_value, corner, d2):
             return self.element_value(corner)
         return 0
 
-    def edge_locked(self, corner, offset):
+    def edge_locked(self, start_value, corner, offset):
         element = corner
+        value = start_value
         for i in range(3):
             element = tuple_sum(element, offset)
-            if self.element_value(element) == 0:
+            next_value = self.element_value(element)
+            if self.element_value(element) == 0 or value <= next_value:
                 return False
+            value = next_value
         return True
 
     def path_value(self, value, element, d1, d2):
@@ -291,7 +294,7 @@ class Board:
         third_value = self.element_value(third_neighbor)
         if third_value == 0 or third_value > second_value:
             return result
-        return result + third_value * 16
+        return result + third_value * 8
 
     def neighbor_offsets(self, corner):
         result = []
@@ -528,6 +531,7 @@ def test():
     test_board([[64, 2, 8, 0], [16, 32, 2, 0], [8, 4, 0, 0], [2, 4, 4, 0]], "up")
     test_board([[64, 8, 8, 0], [16, 2, 8, 16], [8, 32, 2, 4], [2, 16, 2, 2]], "down")
     test_board([[2, 0, 0, 0], [8, 2, 0, 0], [16, 8, 8, 4], [64, 16, 2, 4]], "left")
+    test_board([[8, 4, 4, 0], [4, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 0]], "right")
 
 count = 1
 if len(sys.argv) > 1:
@@ -541,42 +545,45 @@ if len(sys.argv) > 1:
         count = int(sys.argv[1])
 Board().run(count)
 
-# Stats: May 10, 15:05
-# Median for 1000 runs: 540.996
-# nathan@Nathans-MBP boxes % ./boxes.py 1000
-# Average moves: 553.079
-# Average sum: 1666.544
-# Max tile distribution:
-# 	64: 1
-# 	128: 27
-# 	256: 91
-# 	512: 248
-# 	1024: 488
-# 	2048: 145
-# Max board: [[2048, 1024, 512, 256], [32, 128, 256, 64], [8, 16, 32, 16], [2, 4, 2, 4]]
-# Worst seed: 6429000648137277025
-# nathan@Nathans-MBP boxes % ./boxes.py 1000
-# Average moves: 540.996
-# Average sum: 1629.004
+# Current median of 3 averages of 1000 runs: 554.132
+# Previous median of 3 averages of 1000 runs: 540.996
+
+# Fri May 10 15:07:52 EDT 2024
+# Average moves: 554.132
+# Average sum: 1668.64
 # Max tile distribution:
 # 	64: 5
-# 	128: 28
-# 	256: 87
-# 	512: 267
-# 	1024: 471
-# 	2048: 142
-# Max board: [[2048, 128, 8, 4], [1024, 256, 64, 2], [512, 128, 32, 4], [64, 16, 8, 2]]
-# Worst seed: 9077156536320656620
-# nathan@Nathans-MBP boxes % ./boxes.py 1000
-# Average moves: 530.051
-# Average sum: 1595.226
+# 	128: 27
+# 	256: 97
+# 	512: 257
+# 	1024: 465
+# 	2048: 147
+# 	4096: 2
+# Max board: [[4, 32, 2, 8], [2, 16, 32, 16], [4, 8, 16, 1024], [2, 4, 32, 4096]]
+# Worst seed: 8881331921317771165
+# Fri May 10 15:08:46 EDT 2024
+# Average moves: 550.691
+# Average sum: 1658.456
 # Max tile distribution:
-# 	64: 6
-# 	128: 22
-# 	256: 111
-# 	512: 277
+# 	64: 1
+# 	128: 28
+# 	256: 106
+# 	512: 250
+# 	1024: 468
+# 	2048: 145
+# 	4096: 2
+# Max board: [[2, 4, 8, 2], [8, 32, 16, 4], [16, 128, 32, 16], [2, 8, 64, 4096]]
+# Worst seed: 8038581172653389272
+# Fri May 10 15:09:39 EDT 2024
+# Average moves: 563.143
+# Average sum: 1694.878
+# Max tile distribution:
+# 	64: 2
+# 	128: 24
+# 	256: 121
+# 	512: 232
 # 	1024: 466
-# 	2048: 117
-# 	4096: 1
-# Max board: [[4096, 1024, 256, 128], [64, 128, 64, 16], [8, 16, 32, 4], [4, 2, 8, 2]]
-# Worst seed: 3285331602170305581
+# 	2048: 155
+# Max board: [[2, 8, 64, 2048], [8, 64, 128, 1024], [2, 16, 256, 512], [4, 8, 64, 128]]
+# Worst seed: 4179031754838149516
+# Fri May 10 15:10:34 EDT 2024
