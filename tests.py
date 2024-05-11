@@ -6,13 +6,14 @@ def tests():
     test_board([[64, 8, 8, 0], [16, 2, 8, 16], [8, 32, 2, 4], [2, 16, 2, 2]], "down")
     test_board([[2, 0, 0, 0], [8, 2, 0, 0], [16, 8, 8, 4], [64, 16, 2, 4]], "left")
     test_board([[8, 4, 4, 0], [4, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 0]], "right")
+    test_board([[2, 4, 0, 0], [8, 0, 0, 0], [16, 0, 0, 0], [64, 16, 8, 0]], "down")
     
 def test_board(initial_state, pref):
     result = run_board(initial_state, pref)
     if result != pref:
-        print(f"\n\n**** FAILURE ****: Expected {pref} got {result}")
+        print(f"\n**** FAILURE ****: Expected {pref} got {result}")
         run_board(initial_state, pref, True)
-        print("\n\n")
+        print(f"**** FAILURE ****: Expected {pref} got {result}\n")
     else:
         print("success")
 

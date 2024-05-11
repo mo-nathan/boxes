@@ -319,6 +319,7 @@ class Board:
         self.max_sum = 0
         self.min_sum = 2 << 16
         self.max_tile_count = {}
+        self.best_seed = 0
         self.worst_seed = 0
 
     def collect_stats(self):
@@ -330,6 +331,7 @@ class Board:
         if tile_sum > self.max_sum:
             self.max_sum = tile_sum
             self.max_board = self.board
+            self.best_seed = self.seed
         if tile_sum < self.min_sum:
             self.min_sum = tile_sum
             self.worst_seed = self.seed
@@ -347,6 +349,7 @@ class Board:
         for key in sorted(self.max_tile_count.keys()):
             print(f"\t{key}: {self.max_tile_count[key]}")
         print(f"Max board: {self.max_board}")
+        print(f"Best seed: {self.best_seed}")
         print(f"Worst seed: {self.worst_seed}")
 
     def run(self, count):
@@ -369,7 +372,8 @@ class Board:
             print(f"Available moves: {moves}")
             scores = self.evaluate(moves)
             print(f"Scores: {scores}")
-            result = max(scores)[1]
+            result = preferred_move(scores)
+            # result = max(scores)[1]
             print(f"Recommended move: {result}")
             return result
         return None
@@ -382,6 +386,11 @@ class Board:
             self.add_tile()
             self.display()
             move = self.make_recommendation(self.can_move())
+
+
+def preferred_move(scores):
+    BIAS = ['left', 'up', 'right', 'down']
+    return sorted(scores, key=lambda score: (-score[0], BIAS.index(score[1])))[0][1]
 
 def valid_element(element):
     if element == None:
