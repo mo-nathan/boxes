@@ -21,45 +21,46 @@ elif sys.argv[1][0] == 't':
 else:
     command_line_help()
 
-# Current median of 3 averages of 1000 runs: 554.132
-# Previous median of 3 averages of 1000 runs: 540.996
+# Current median moves of 3 averages of 1000 runs: 855.347
+# Previous median moves of 3 averages of 1000 runs: 554.132
+# Previous median moves of 3 averages of 1000 runs: 540.996
 
-# Fri May 10 15:07:52 EDT 2024
-# Average moves: 554.132
-# Average sum: 1668.64
+# Sat May 11 11:09:19 EDT 2024
+# Average moves: 855.347
+# Average sum: 2001.222
 # Max tile distribution:
-# 	64: 5
-# 	128: 27
-# 	256: 97
-# 	512: 257
-# 	1024: 465
-# 	2048: 147
-# 	4096: 2
-# Max board: [[4, 32, 2, 8], [2, 16, 32, 16], [4, 8, 16, 1024], [2, 4, 32, 4096]]
-# Worst seed: 8881331921317771165
-# Fri May 10 15:08:46 EDT 2024
-# Average moves: 550.691
-# Average sum: 1658.456
+# 	128: 8
+# 	256: 61
+# 	512: 146
+# 	1024: 565
+# 	2048: 220
+# Max board: [[4, 16, 32, 2048], [2, 32, 256, 1024], [4, 16, 128, 512], [8, 4, 16, 256]]
+# Best seed: 4224044503291101573
+# Worst seed: 2542187498084904923
+# Sat May 11 11:10:40 EDT 2024
+# Average moves: 835.239
+# Average sum: 1952.966
 # Max tile distribution:
 # 	64: 1
-# 	128: 28
-# 	256: 106
-# 	512: 250
-# 	1024: 468
-# 	2048: 145
-# 	4096: 2
-# Max board: [[2, 4, 8, 2], [8, 32, 16, 4], [16, 128, 32, 16], [2, 8, 64, 4096]]
-# Worst seed: 8038581172653389272
-# Fri May 10 15:09:39 EDT 2024
-# Average moves: 563.143
-# Average sum: 1694.878
+# 	128: 16
+# 	256: 54
+# 	512: 177
+# 	1024: 540
+# 	2048: 212
+# Max board: [[2, 4, 8, 2], [8, 16, 32, 8], [16, 64, 128, 64], [2048, 1024, 512, 256]]
+# Best seed: 5682547505023034735
+# Worst seed: 7172620897910841814
+# Sat May 11 11:12:00 EDT 2024
+# Average moves: 837.738
+# Average sum: 1959.254
 # Max tile distribution:
-# 	64: 2
-# 	128: 24
-# 	256: 121
-# 	512: 232
-# 	1024: 466
-# 	2048: 155
-# Max board: [[2, 8, 64, 2048], [8, 64, 128, 1024], [2, 16, 256, 512], [4, 8, 64, 128]]
-# Worst seed: 4179031754838149516
-# Fri May 10 15:10:34 EDT 2024
+# 	64: 1
+# 	128: 17
+# 	256: 55
+# 	512: 170
+# 	1024: 548
+# 	2048: 209
+# Max board: [[2048, 32, 8, 4], [1024, 256, 64, 8], [512, 128, 32, 4], [32, 16, 8, 2]]
+# Best seed: 551776581505276437
+# Worst seed: 8080923224547169001
+# Sat May 11 11:13:20 EDT 2024

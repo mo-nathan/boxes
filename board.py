@@ -31,14 +31,16 @@ class Board:
 
     def add_tile(self):
         # Insert a 2 or a 4 tile in one of the existing 0 tiles.
-        # A 0 title is picked at random and there is an equal
-        # probability that a 2 or 4 gets inserted.  The original
-        # game seems to be biased towards adding 2s, but I don't
-        # know how important that is.
+        # A 0 title is picked at random and there is a 1 in 6
+        # probability that a 4 gets inserted otherwise a 2 is used.
+        # This based on a sample of 300 moves from the original game.
         zeros = self.count_zeros()
         if zeros > 0:
             target = randrange(zeros)
-            self.replace_zero(target, randrange(2) * 2 + 2)
+            value = 2
+            if randrange(6) == 0:
+                value = 4
+            self.replace_zero(target, value)
 
     def count_zeros(self):
         count = 0
