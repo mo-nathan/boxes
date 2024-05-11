@@ -365,44 +365,23 @@ class Board:
         self.report_stats(count)
 
     def make_recommendation(self, moves):
-        print(f"Available moves: {moves}")
-        scores = self.evaluate(moves)
-        print(f"Scores: {scores}")
-        result = max(scores)[1]
-        print(f"Recommended move: {result}")
-        return result
-                
-    def interactive(self):
-        self.reset_board()
-        print(self.seed)
-        self.display()
-        moves = self.can_move()
-        keep_asking = True
-        while moves != []:
-            move = self.make_recommendation(moves)
-            if keep_asking:
-                command = input_move()
-                if command != '':
-                    if command == 'quit':
-                        break
-                    elif command == 'go':
-                        keep_asking = False
-                    elif command[0] == 's':
-                        self.reset_board(int(move[1:]))
-                        keep_asking = False
-                    else:
-                        move = command
-            else:
-                move = self.best_move(moves)
-            if move not in moves:
-                print(f"Invalid move: {move}")
-                continue
-            print(f"Moving {move}")
+        if moves:
+            print(f"Available moves: {moves}")
+            scores = self.evaluate(moves)
+            print(f"Scores: {scores}")
+            result = max(scores)[1]
+            print(f"Recommended move: {result}")
+            return result
+        return None
+
+    def go(self, move = None):
+        if move == None:
+            move = self.make_recommendation(self.can_move())
+        while move:
             self.move(move)
             self.add_tile()
             self.display()
-            moves = self.can_move()
-        self.report()
+            move = self.make_recommendation(self.can_move())
 
 def valid_element(element):
     if element == None:
@@ -494,15 +473,3 @@ def tuple_sum(t1, t2):
     if t1 == None:
         return None
     return tuple(map(lambda i, j: i + j, t1, t2))
-
-def input_move():
-    valid_inputs = {
-        'l': 'left',
-        'r': 'right',
-        'u': 'up',
-        'd': 'down',
-        'q': 'quit',
-        'g': 'go',
-    }
-    result = input("Enter one of l(eft), r(ight), u(p), d(own), q(uit), g(o): ")
-    return valid_inputs.get(result) or result

@@ -2,6 +2,7 @@
 
 import sys
 from board import Board
+from interpreter import Interpreter
 from tests import tests
 
 def command_line_help():
@@ -12,7 +13,7 @@ def command_line_help():
     print("\nAnything else will print this message.")
 
 if len(sys.argv) == 1:
-    Board().interactive()
+    Interpreter().run()
 elif sys.argv[1].isnumeric():
     Board().run(int(sys.argv[1]))
 elif sys.argv[1][0] == 't':
