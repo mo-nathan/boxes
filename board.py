@@ -145,17 +145,18 @@ class Board:
         # Determine the relative scores of moves in the different
         # directions.
         scores = []
+        debug = self.debugger
         for direction in directions:
             dir_total = 0
             dir_weight = 0
+            if self.debugger:
+                print(f"\nevaluate {direction}:")
             for projection in self.projections(direction):
                 dir_total += projection.weighted_total()
                 dir_weight += projection.weight
-            if self.debugger:
-                print(f"\nevaluate {direction}:")
             total = dir_total / float(dir_weight)
             if self.debugger:
-                print(f"Total: {total}")
+                print(f"weighted average: {total}\n")
             scores.append((total, direction))
         return scores
 
@@ -164,19 +165,24 @@ class Board:
         next_board = self.copy()
         next_points = next_board.move(direction)
         if self.debugger:
-            print(f"projections: {direction}")
+            next_board.display()
+        debug = self.debugger
+        self.debugger = False
+        next_board.debugger = False
+        # if self.debugger:
+        #     print(f"projections: {direction}")
         zeros = next_board.count_zeros()
         for target in range(zeros):
             for value, weight in [(2, 5/6.0), (4, 1/6.0)]:
-                if self.debugger:
-                    print(f"\ttarget: {target}, value: {value}, weight: {weight}")
-                    print("next_board:")
-                    next_board.display()
+                # if self.debugger:
+                #     print(f"\ttarget: {target}, value: {value}, weight: {weight}")
+                #     print("next_board:")
+                #     next_board.display()
                 replace_board = next_board.copy()
                 replace_board.replace_zero(target, value)
-                if self.debugger:
-                    print("replace_board:")
-                    replace_board.display()
+                # if self.debugger:
+                #     print("replace_board:")
+                #     replace_board.display()
                 moves = replace_board.can_move()
                 if moves:
                     max_score = 0
@@ -193,13 +199,14 @@ class Board:
                             max_dir = dir2
                             max_points = nn_points
                     projection = Projection(max_board, next_points + max_points, weight)
-                    if self.debugger:
-                        print(f"\tsecond move: {max_dir}, score: {max_score}")
-                        print(f"\tprojections: {projection.weighted_total()}, {projection.weight}")
+                    # if self.debugger:
+                    #     print(f"\tsecond move: {max_dir}, score: {max_score}")
+                    #     print(f"\tprojections: {projection.weighted_total()}, {projection.weight}")
                     result.append(projection)
                 else:
                     # Boards with no moves are GAME OVER!
                     result.append(Projection(replace_board, None, weight))
+        self.debugger = debug
         return result
 
     def best_move(self, directions):
@@ -294,35 +301,23 @@ class Board:
         return True
 
     def path_value(self, value, element, d1, d2):
-        # if self.debugger:
-        #     print(f"path_value: {value}, {element}, {d1}, {d2}")
         element_value = self.element_value(element)
         if element_value == 0:
-            # if self.debugger:
-            #     print(f"return {0}")
             return 0
         if element_value > value:
-            # if self.debugger:
-            #     print(f"return {None}")
             return None
         if element_value == value:
-            # if self.debugger:
-            #     print(f"return {value * 2}")
             return value * 2
         first_neighbor = tuple_sum(element, d1)
         first_value = None
         if valid_element(first_neighbor):
             first_value = self.path_value(element_value, first_neighbor, d1, d2)
-            # if self.debugger:
-            #     print(f"pop: {value}, {element}, {d1}, {d2}: {first_value}")
         else:
             d1 = (-d1[0], -d1[1])
         second_neighbor = tuple_sum(element, d2)
         second_value = None
         if valid_element(second_neighbor):
             second_value = self.path_value(element_value, second_neighbor, d1, d2)
-            # if self.debugger:
-            #     print(f"pop: {value}, {element}, {d1}, {d2}: {second_value}")
         if first_value == None:
             if second_value == None:
                 result = None
@@ -332,8 +327,6 @@ class Board:
             result = value + first_value
         else:
             result = value + max([first_value, second_value])
-        # if self.debugger:
-        #     print(f"return {result}")
         return result
 
     def old_neighbor_score(self):
