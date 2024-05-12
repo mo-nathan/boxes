@@ -1,6 +1,7 @@
 from random import randrange
 from random import seed
 from copy import deepcopy
+from projection import Projection
 import sys
 
 class Board:
@@ -27,7 +28,10 @@ class Board:
 
     def report(self):
         print(f"Total moves: {self.move_count}")
-        print(f"Sum: {sum(flatten(self.board))}")
+        print(f"Sum: {self.total_sum()}")
+
+    def total_sum(self):
+        return sum(flatten(self.board))
 
     def add_tile(self):
         # Insert a 2 or a 4 tile in one of the existing 0 tiles.
@@ -126,17 +130,82 @@ class Board:
         # Board in the given direction.  This allows the next
         # state to be evaluated without messing up the "real"
         # board.
+        result = self.copy()
+        points = result.move(direction)
+        return result, points
+
+    def copy(self):
         result = Board()
         result.move_count = 0
         result.debugger = self.debugger
         result.board = deepcopy(self.board)
-        points = result.move(direction)
-        return result, points
+        return result
+
+    def evaluate(self, directions):
+        # Determine the relative scores of moves in the different
+        # directions.
+        scores = []
+        for direction in directions:
+            dir_total = 0
+            dir_weight = 0
+            for projection in self.projections(direction):
+                dir_total += projection.weighted_total()
+                dir_weight += projection.weight
+            if self.debugger:
+                print(f"\nevaluate {direction}:")
+            total = dir_total / float(dir_weight)
+            if self.debugger:
+                print(f"Total: {total}")
+            scores.append((total, direction))
+        return scores
+
+    def projections(self, direction):
+        result = []
+        next_board = self.copy()
+        next_points = next_board.move(direction)
+        if self.debugger:
+            print(f"projections: {direction}")
+        zeros = next_board.count_zeros()
+        for target in range(zeros):
+            for value, weight in [(2, 5/6.0), (4, 1/6.0)]:
+                if self.debugger:
+                    print(f"\ttarget: {target}, value: {value}, weight: {weight}")
+                    print("next_board:")
+                    next_board.display()
+                replace_board = next_board.copy()
+                replace_board.replace_zero(target, value)
+                if self.debugger:
+                    print("replace_board:")
+                    replace_board.display()
+                moves = replace_board.can_move()
+                if moves:
+                    max_score = 0
+                    max_board = replace_board
+                    max_dir = None
+                    max_points = 0
+                    for dir2 in moves:
+                        nn_board = replace_board.copy()
+                        nn_points = nn_board.move(dir2)
+                        score = nn_points + nn_board.score()
+                        if score > max_score:
+                            max_score = score
+                            max_board = nn_board
+                            max_dir = dir2
+                            max_points = nn_points
+                    projection = Projection(max_board, next_points + max_points, weight)
+                    if self.debugger:
+                        print(f"\tsecond move: {max_dir}, score: {max_score}")
+                        print(f"\tprojections: {projection.weighted_total()}, {projection.weight}")
+                    result.append(projection)
+                else:
+                    # Boards with no moves are GAME OVER!
+                    result.append(Projection(replace_board, None, weight))
+        return result
 
     def best_move(self, directions):
         return max(self.evaluate(directions))[1]
 
-    def evaluate(self, directions):
+    def old_evaluate(self, directions):
         # Determine the relative scores of moves in the different
         # directions.
         scores = []
@@ -174,7 +243,7 @@ class Board:
                 if self.board[i1][i2] > best_value:
                     self.best_corners = [(i1, i2)]
                     best_value = self.board[i1][i2]
-                elif self.board[i1][2] == best_value:
+                elif self.board[i1][i2] == best_value:
                     self.best_corners.append((i1, i2))
 
     def best_corner_score(self):

@@ -7,7 +7,8 @@ def tests():
     test_board([[2, 0, 0, 0], [8, 2, 0, 0], [16, 8, 8, 4], [64, 16, 2, 4]], "left")
     test_board([[8, 4, 4, 0], [4, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 0]], "right")
     test_board([[2, 4, 0, 0], [8, 0, 0, 0], [16, 0, 0, 0], [64, 16, 8, 0]], "down")
-    
+    test_board([[2, 4, 16, 128], [0, 4, 16, 4], [2, 4, 32, 4], [0, 4, 2, 8]], "up")
+
 def test_board(initial_state, pref):
     result = run_board(initial_state, pref)
     if result != pref:

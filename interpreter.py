@@ -73,6 +73,7 @@ def seed(board, move, key, command):
 
 def why(board, move, key, command):
     board.debugger = True
+    board.display()
     board.evaluate(board.can_move())
     board.debugger = False
 
